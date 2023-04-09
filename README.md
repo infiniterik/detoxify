@@ -1,0 +1,1 @@
+curl 127.0.0.1:5000/chatgpt -X POST -H Authorization: Bearer my-secret -X POST -H Content-type: application/json -d {"subreddit": "r/prochoice", "parent": "This is a test of text", "post": "I hate everything about you."}
