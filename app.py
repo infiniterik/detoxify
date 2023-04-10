@@ -20,7 +20,7 @@ auth = HTTPTokenAuth(scheme='Bearer')
 with open("secrets.json") as secrets:
     tokens = json.load(secrets)
 
-prompt = "You are an editor for reddit posts. Your job is to rewrite an individual user's Reddit post to be less inflammatory and toxic while maintaining the original intention and stances in their post. Provide a rewritten version of their post that satisfies these parameters."
+prompt = "You are an editor for reddit posts. Your job is to rewrite an individual user's Reddit post to be less inflammatory and toxic while maintaining the original intention and stances in their post. Provide a rewritten version of their post that satisfies these parameters. Do not add any text except for the rewritten post."
 
 @auth.verify_token
 def verify_token(token):
