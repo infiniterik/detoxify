@@ -2,7 +2,14 @@ from flask import Flask, request
 from flask_restx import Api, Resource, fields
 from flask_httpauth import HTTPTokenAuth
 import json
-import openai
+
+import chains.openaiChain as openaiChain
+
+from langchain.prompts import PromptTemplate
+
+
+from dotenv import load_dotenv
+load_dotenv()
 
 
 authorizations = {
@@ -15,25 +22,40 @@ authorizations = {
 
 app = Flask(__name__)
 api = Api(app, authorizations=authorizations, security='apikey')
-auth = HTTPTokenAuth(scheme='Bearer')
+auth = HTTPTokenAuth()
 
 with open("secrets.json") as secrets:
     tokens = json.load(secrets)
 
-prompt = "You are an editor for reddit posts. Your job is to rewrite an individual user's Reddit post to be less inflammatory and toxic while maintaining the original intention and stances in their post. Provide a rewritten version of their post that satisfies these parameters. Do not add any text except for the rewritten post."
-
 @auth.verify_token
 def verify_token(token):
     if token in tokens:
+        print(tokens[token])
         return tokens[token]
+    else:
+        print("Invalid token - " + token)
 
 rephrase = api.model("Rephrase", {
     "post": fields.String(description="The post to be rephrased", required=True)
 })
 
+rephraseT5WithParent = api.model("RephraseT5WithParent", {
+    "post": fields.String(description="The post to be rephrased", required=True),
+    "parent": fields.String(description="The parent post", required=False),
+    "model": fields.String(description="The model to use", required=True)
+})
+
 @api.route('/chatgpt', endpoint='chatgpt')
 @api.doc(body=rephrase, security='apikey')
 class ChatGPT(Resource):
+    @auth.login_required
+    def post(self):
+        text = request.json["post"]
+        return openaiChain.runOpenAIChain(text)
+
+@api.route('/t5', endpoint='t5')
+@api.doc(body=rephrase, security='apikey')
+class T5Endpoint(Resource):
     @auth.login_required
     def post(self):
         text = request.json["post"]
