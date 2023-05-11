@@ -4,6 +4,7 @@ from flask_httpauth import HTTPTokenAuth
 import json
 
 import chains.openaiChain as openaiChain
+import chains.T5Chain as T5Chain
 
 from langchain.prompts import PromptTemplate
 
@@ -42,6 +43,7 @@ rephrase = api.model("Rephrase", {
 rephraseT5WithParent = api.model("RephraseT5WithParent", {
     "post": fields.String(description="The post to be rephrased", required=True),
     "parent": fields.String(description="The parent post", required=False),
+    "parent_toxicity": fields.String(description="The toxicity of the parent post (high or low)", required=False),
     "model": fields.String(description="The model to use", required=True)
 })
 
@@ -54,18 +56,13 @@ class ChatGPT(Resource):
         return openaiChain.runOpenAIChain(text)
 
 @api.route('/t5', endpoint='t5')
-@api.doc(body=rephrase, security='apikey')
+@api.doc(body=rephraseT5WithParent, security='apikey')
 class T5Endpoint(Resource):
     @auth.login_required
     def post(self):
-        text = request.json["post"]
-        result = openai.ChatCompletion.create(
-            model="gpt-3.5-turbo",
-            messages=[
-                {"role": "system", "content": prompt},
-                {"role": "user", "content": text}
-            ])
-        return result["choices"][0].message.content
+        model = request.json["model"]
+        rq = {k: v for k, v in request.json.items() if k != "model"}
+        return T5Chain.pcts_chatgpt(rq)
 
 if __name__ == '__main__':
     app.run()
