@@ -25,3 +25,4 @@ zipp==3.15.0
 flask-restx==1.1.0
 langchain==0.0.165
 python-dotenv==1.0.0
+streamlit==1.22.0

@@ -41,15 +41,16 @@ class SummaryChain(Chain):
 
     @property
     def output_keys(self) -> List[str]:
-        return ['post']
+        return ['result', 'prompt']
 
     def _call(self, inputs: Dict[str, str]) -> Dict[str, str]:
         if "parent" in inputs:
             inputs["parent_summary"] = self.summarizer.run(post=inputs["parent"])
         if "post" in inputs:
             inputs["summary"] = self.summarizer.run(post=inputs["post"])
-        t5_result = self.model.predict(self.prompt.format(**{k: v for k,v in inputs.items() if k in self.prompt.input_variables}))
-        return {'post': t5_result}
+        t5_prompt = self.prompt.format(**{k: v for k,v in inputs.items() if k in self.prompt.input_variables})
+        t5_result = self.model.predict(t5_prompt)
+        return {'result': t5_result, 'prompt': t5_prompt}
 
 
 prompt = PromptTemplate(
@@ -70,4 +71,4 @@ model = SimpleT5()
 model.from_pretrained("t5", artifact_dir)
 PCTS_CHATGPT_chain = SummaryChain(summarizer=openAIChain, prompt=PCTS, model=model)
 
-pcts_chatgpt = lambda x: PCTS_CHATGPT_chain.run(x)
+pcts_chatgpt = lambda x: {k: v for k, v in PCTS_CHATGPT_chain(x).items() if k in ["result", "prompt"]}

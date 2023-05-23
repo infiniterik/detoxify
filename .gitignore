@@ -267,3 +267,4 @@ secrets.json
 
 wandb/
 artifacts/
+workspace.code-workspace
