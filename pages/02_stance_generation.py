@@ -12,9 +12,12 @@ st.markdown("""
         </style>
         """, unsafe_allow_html=True)
 
+if "api_key" not in st.session_state:
+    st.session_state["api_key"]="my-secret"
+
 headers = {
     "Content-Type": "application/json; charset=utf-8",
-    "Authorization": "Bearer my-secret"
+    "Authorization": f"Bearer {st.session_state.api_key}"
 }
 
 if "stances" not in st.session_state:

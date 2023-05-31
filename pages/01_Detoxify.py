@@ -16,11 +16,15 @@ st.markdown("""
 if "model" not in st.session_state:
     st.session_state.model = "ChatGPT"
  
+if "api_key" not in st.session_state:
+    st.session_state["api_key"]="my-secret"
  
 headers = {
     "Content-Type": "application/json; charset=utf-8",
-    "Authorization": "Bearer my-secret"
+    "Authorization": f"Bearer {st.session_state.api_key}"
 }
+
+#st.json(headers)
 
 example_posts = {
     'None': ("Enter parent post here", "toxic", "Enter post here"),

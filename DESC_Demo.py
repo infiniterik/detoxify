@@ -17,3 +17,8 @@ st.markdown(
     Check out our paper in SICon in July 2023!
 """
 )
+
+if "api_key" not in st.session_state:
+    st.session_state["api_key"]="my-secret"
+
+api_key = st.text_input('API_KEY', "entry api key here", key="api_key")
