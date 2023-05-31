@@ -5,6 +5,7 @@ import json
 
 import chains.openaiChain as openaiChain
 import chains.T5Chain as T5Chain
+import chains.stancedriven as stancedriven
 
 from langchain.prompts import PromptTemplate
 
@@ -47,6 +48,10 @@ rephraseT5WithParent = api.model("RephraseT5WithParent", {
     "model": fields.String(description="The model to use", required=True)
 })
 
+stanceDrivenDemo = api.model("StanceDrivenDemo", {
+    "stances": fields.String("The stances to use", required=True)
+})
+
 @api.route('/chatgpt', endpoint='chatgpt')
 @api.doc(body=rephrase, security='apikey')
 class ChatGPT(Resource):
@@ -63,6 +68,14 @@ class T5Endpoint(Resource):
         model = request.json["model"]
         rq = {k: v for k, v in request.json.items() if k != "model"}
         return T5Chain.pcts_chatgpt(rq)
+
+@api.route('/stanceDriven', endpoint='stancedriven')
+@api.doc(body=stanceDrivenDemo, security='apikey')
+class StanceDrivenEndpoint(Resource):
+    @auth.login_required
+    def post(self):
+        rq = {k: v for k, v in request.json.items() if k != "model"}
+        return stancedriven.stance_detection(rq)
 
 if __name__ == '__main__':
     app.run(port=8000, host="0.0.0.0")
