@@ -14,7 +14,7 @@ st.markdown("""
         """, unsafe_allow_html=True)
 
 if "model" not in st.session_state:
-    st.session_state.model = "ChatGPT"
+    st.session_state.model = "GPT"
  
 if "api_key" not in st.session_state:
     st.session_state["api_key"]="my-secret"
@@ -63,7 +63,7 @@ option = pmodel_select.selectbox(
     example_posts.keys())
 
 
-pexample.selectbox("Models 👇", ["ChatGPT", "PCTS", "Comparison"], key="model")
+pexample.selectbox("Models 👇", ["GPT", "PCTS", "Comparison"], key="model")
 
 parent_placeholder, st.session_state.parent_toxicity, post_placeholder = example_posts[option]
 
@@ -99,12 +99,12 @@ if form.button('Detoxify!'):
                 p1.markdown(res["result"][0])
                 p2.markdown(res["prompt"])
                 additional_info.expanded = False
-        if st.session_state.model in ["ChatGPT", "Comparison"]:
+        if st.session_state.model in ["GPT", "Comparison"]:
             url = f"http://localhost:8000/chatgpt"
             chatgpt_response = requests.post(url, headers=headers, json={
                 "post": post
             })
-            with chatgpt_col.expander("ChatGPT", True):
+            with chatgpt_col.expander("GPT", True):
                 res = chatgpt_response.json()
                 p1, = st.tabs(["Detoxified Post"])
                 p1.markdown(res["post"])
