@@ -18,7 +18,4 @@ st.markdown(
 """
 )
 
-if "api_key" not in st.session_state:
-    st.session_state["api_key"]="my-secret"
-
-api_key = st.text_input('API_KEY', "entry api key here", key="api_key")
+api_key = st.text_input('Enter API KEY here', "my-secret", key="api_key")

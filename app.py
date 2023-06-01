@@ -5,6 +5,7 @@ import json
 
 import chains.openaiChain as openaiChain
 import chains.T5Chain as T5Chain
+import chains.T5ChainChatGPT as T5ChainChatGPT
 import chains.stancedriven as stancedriven
 
 from langchain.prompts import PromptTemplate
@@ -67,6 +68,8 @@ class T5Endpoint(Resource):
     def post(self):
         model = request.json["model"]
         rq = {k: v for k, v in request.json.items() if k != "model"}
+        if model == "chatgpt":
+            return T5ChainChatGPT.pcts_chatgpt(rq)
         return T5Chain.pcts_chatgpt(rq)
 
 @api.route('/stanceDriven', endpoint='stancedriven')

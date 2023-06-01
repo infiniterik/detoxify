@@ -29,9 +29,11 @@ headers = {
 example_posts = {
     'None': ("Enter parent post here", "toxic", "Enter post here"),
     'Toxic Example 1': ("Abortion is murder. You should be ashamed of yourself!", "toxic", "There’s no shame in abortion. Only repressed and self loathing people like you, feel that way. I’ve had two and don’t regret anything. Your shame tactics don’t work with me, cupcake."),
-    'Toxic Example 2': ("Enter parent post here", "toxic", "Enter post here"),
-    'Non-Toxic Example 1': ("Enter parent post here", "non-toxic", "Enter post here"),
-    'Non-Toxic Example 2': ("Enter parent post here", "non-toxic", "Enter post here"),
+    'Toxic Example 2': ("Not caring does not change the reality of the situation. \nFor a third time:\n>You are aware that politicians act based on what is beneficial to them and do not take action unless something is a net gain for them. Knowing that, and knowing that Biden stands to gain a lot from acting and lose from not acting, why is he not acting? What incentive do you think is driving him to not act when he can act?", 
+                        "non-toxic", "I don’t know, and I don’t care. I want him to do his fucking job and ensure women’s rights. Otherwise I don’t fucking care what his intentions or his personal motivations are. That isn’t part of the job description. He’s elected to protect and defend American rights. I don’t give a shit about his pyschological profile or his personal issues or whatever else are his underlying motivations. His job is to protect federal American rights. That’s what he’s elected to do. Period."),
+    'Long Toxic Example': ("They’re actual criminals. I don’t give a shit if he steps on antichoice criminal conservative leader sensitivities. They’re breaking the law. They have been breaking the law for decades, and it keeps getting thrown to the federal courts, and the courts have told them time and again that they can’t break federal law concerning women’s rights. While American women have personally suffered the repercussions of these assholes for decades. No. I truly don’t give a rats ass if it hasn’t been done before. These antichoice governors knowingly get into office, to constantly attempt to break federal law. If any normal citizen tried that,  they would be automatically thrown in jail. Im tired of placating these arrogant, antichoice, autocratic criminal assholes. They break law, under false guise of leading their state. And knowingly break their oaths to the us govt. The president or scotus needs to step the f up and say, enough. It’s gone on long enough, and yet nobody, not a single goddamned legitimate federal leader, will call them to account or take them to task for constantly attempting to break federal law. It’s fucking outrageous. I don’t give a shit how they personally feel about abortion. Their oath is to protect and uphold the laws of the United States. Instead of constantly trying to invalidate them. If they can’t do their actual job, then get out of office. There is no actual conversation about what happens, when state leaders are knowingly elected, that intentionally and constantly make a mockery of actual us and American federal law, rights, and liberties. None. And federal leaders refuse to acknowledge the outright, illegal proceedings against American women’s rights that have been occurring for fucking  fifty years. Someone has to fucking say it. When are actual federal leaders going to?", 
+                            "toxic", "I don’t know, and I don’t care. I want him to do his fucking job and ensure women’s rights. Otherwise I don’t fucking care what his intentions or his personal motivations are. That isn’t part of the job description. He’s elected to protect and defend American rights. I don’t give a shit about his pyschological profile or his personal issues or whatever else are his underlying motivations. His job is to protect federal American rights. That’s what he’s elected to do. Period."),
+    'Non-Toxic Example': ("People are not incubators!", "non-toxic", "Indeed. These anti-abortion bills are horribly sexist."),
 }
 
 
@@ -80,13 +82,14 @@ if st.session_state.model in ["PCTS", "Comparison"]:
     ptext, ptox = additional_info.columns(2)
     parent = ptext.text_area('Parent', parent_placeholder)
     ptox.radio("Parent post toxicity ☣️", ["toxic", "non-toxic"], key="parent_toxicity")
+    ptox.radio("GPT Model for summarization", ["chatgpt", "gpt3.5"], key="use_chatgpt")
 
 if form.button('Detoxify!'):
     with st.spinner("Detoxifying..."):
         if st.session_state.model in ["PCTS", "Comparison"]:
             url = f"http://localhost:8000/t5"
             pcts_response = requests.post(url, headers=headers, json={
-                "model": st.session_state.model,
+                "model": st.session_state.use_chatgpt,
                 "parent": parent,
                 "parent_toxicity": st.session_state.parent_toxicity,
                 "post": post
