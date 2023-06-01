@@ -50,6 +50,9 @@ if st.button('Generate!'):
         generated_post = requests.post(url, headers=headers, json={"stances": stances})
         with st.expander("Stances", True):
                 res = generated_post.json()
-                p1, p2 = st.tabs(["Detoxified Post", "Prompt"])
+                #st.write(res["prompt"])
+                cgpt = res["prompt"].split("Reply summary:")[1].split("A low toxicity reply:")[0].strip()
+                p1, p2, p3 = st.tabs(["D-ESC Smoothed Post", "GPT3.5 Response", "Prompt"])
                 p1.markdown(res["result"][0])
-                p2.markdown(res["prompt"])
+                p2.markdown(cgpt)
+                p3.markdown(res["prompt"])
