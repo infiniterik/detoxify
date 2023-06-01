@@ -27,7 +27,7 @@ headers = {
 #st.json(headers)
 
 example_posts = {
-    'None': ("Enter parent post here", "toxic", "Enter post here"),
+    #'None': ("Enter parent post here", "toxic", "Enter post here"),
     'Toxic Example 1': ("Abortion is murder. You should be ashamed of yourself!", "toxic", "There’s no shame in abortion. Only repressed and self loathing people like you, feel that way. I’ve had two and don’t regret anything. Your shame tactics don’t work with me, cupcake."),
     'Toxic Example 2': ("Not caring does not change the reality of the situation. \nFor a third time:\n>You are aware that politicians act based on what is beneficial to them and do not take action unless something is a net gain for them. Knowing that, and knowing that Biden stands to gain a lot from acting and lose from not acting, why is he not acting? What incentive do you think is driving him to not act when he can act?", 
                         "non-toxic", "I don’t know, and I don’t care. I want him to do his fucking job and ensure women’s rights. Otherwise I don’t fucking care what his intentions or his personal motivations are. That isn’t part of the job description. He’s elected to protect and defend American rights. I don’t give a shit about his pyschological profile or his personal issues or whatever else are his underlying motivations. His job is to protect federal American rights. That’s what he’s elected to do. Period."),
@@ -36,19 +36,12 @@ example_posts = {
     'Non-Toxic Example': ("People are not incubators!", "non-toxic", "Indeed. These anti-abortion bills are horribly sexist."),
 }
 
-
 st.sidebar.markdown("""# Instructions
-Select a model and enter a post to detoxify. The PCTS model additionally requires information about the parent post. You may select a pre-defined example post from the dropdown menu or enter your own""")
-
-st.sidebar.markdown("""## Select Model""")
-
-st.sidebar.radio("Models 👇", ["ChatGPT", "PCTS", "Comparison"], key="model")
-
-st.sidebar.markdown("""
-Select the model you want to use to detoxify the post.
+1. Select a model and enter a post to detoxify. The PCTS model additionally requires information about the parent post. You may select a pre-defined example post from the dropdown menu or enter your own
 - `ChatGPT`: Prompts chatgpt to detoxify the post directly.
 - `PCTS`: Constructs a prompt consisting of the parent post, summaries, and desired toxicity levels to detoxify the post using a fine-tuned `T5-Large` model.
 - `Comparison`: Displays both outputs side-by-side.
+2. Select an example or enter your own to the right
 """)
                     
 
@@ -63,9 +56,14 @@ st.title("D-ESC Detoxifier: " + st.session_state.model)
 
 ## Examples here
 
-option = st.selectbox(
+#pmodel_select, pexample = st.columns(2)
+pexample, pmodel_select = st.columns(2)
+option = pmodel_select.selectbox(
     'Example posts',
     example_posts.keys())
+
+
+pexample.selectbox("Models 👇", ["ChatGPT", "PCTS", "Comparison"], key="model")
 
 parent_placeholder, st.session_state.parent_toxicity, post_placeholder = example_posts[option]
 
@@ -79,10 +77,11 @@ else:
 post = form.text_area('Post', post_placeholder)
 additional_info = form.expander("Parent Data", True)
 if st.session_state.model in ["PCTS", "Comparison"]:
-    ptext, ptox = additional_info.columns(2)
-    parent = ptext.text_area('Parent', parent_placeholder)
+    ptext, pinfo = additional_info.columns(2)
+    parent = ptext.text_area('Enter Parent post here', parent_placeholder)
+    ptox, pmodel = pinfo.columns(2)
     ptox.radio("Parent post toxicity ☣️", ["toxic", "non-toxic"], key="parent_toxicity")
-    ptox.radio("GPT Model for summarization", ["chatgpt", "gpt3.5"], key="use_chatgpt")
+    pmodel.radio("GPT Model for summarization", ["chatgpt", "gpt3.5"], key="use_chatgpt")
 
 if form.button('Detoxify!'):
     with st.spinner("Detoxifying..."):
