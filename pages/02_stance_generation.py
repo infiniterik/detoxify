@@ -12,13 +12,33 @@ st.markdown("""
         </style>
         """, unsafe_allow_html=True)
 
-if "api_key" not in st.session_state:
-    st.session_state["api_key"]="my-secret"
+st.sidebar.markdown("""# Instructions
+Select stances to be expressed in a single post. The post will be generated using GPT3.5 and then smoothed by the T5 model.
+""")
 
-headers = {
-    "Content-Type": "application/json; charset=utf-8",
-    "Authorization": f"Bearer {st.session_state.api_key}"
-}
+api_key = st.sidebar.text_input('Enter API KEY here', "my-secret", key="api_key")
+is_local = st.sidebar.checkbox("Local", key="local")
+base_url = "http://localhost:8000"
+if not is_local:
+    base_url = st.sidebar.text_input('Enter API KEY here', "http://localhost:8000", key="base-url")
+
+def get_stance_driven_posts_requests(stances):
+    headers = {
+        "Content-Type": "application/json; charset=utf-8",
+        "Authorization": f"Bearer {st.session_state.api_key}"
+    }
+    url = f"{st.session_state.get('base_url')}/stanceDriven"
+    return requests.post(url, headers=headers, json={"stances": stances}).json()
+
+def get_stance_driven_posts_local(stances):
+    from chains.stancedriven import stance_detection
+    return stance_detection(stances)
+
+def get_stance_driven_posts(stances):
+    if st.session_state.local:
+        return get_stance_driven_posts_requests(stances)
+    else:
+        return get_stance_driven_posts_local(stances)
 
 if "stances" not in st.session_state:
         st.session_state.stances = []
@@ -30,9 +50,7 @@ sample_stances = {
     "<BAN_ABORTION[ban[abortion]],2.50,1>": "Somewhat strong belief that abortion should be banned and a positive sentiment towards banning abortions."
 }
 
-st.sidebar.markdown("""# Instructions
-Select stances to be expressed in a single post. The post will be generated using GPT3.5 and then smoothed by the T5 model.
-""")
+
 
 
 st.title("Preliminary: D-ESC Stance-driven post generation")
@@ -46,13 +64,11 @@ if st.session_state.stances:
 
 if st.button('Generate!'):
     with st.spinner("Generate..."):
-        url = f"http://localhost:8000/stanceDriven"
-        generated_post = requests.post(url, headers=headers, json={"stances": stances})
+        generated_posts = get_stance_driven_posts_local(stances)
         with st.expander("Stances", True):
-                res = generated_post.json()
                 #st.write(res["prompt"])
-                cgpt = res["prompt"].split("Reply summary:")[1].split("A low toxicity reply:")[0].strip()
+                cgpt = generated_posts["prompt"].split("Reply summary:")[1].split("A low toxicity reply:")[0].strip()
                 p1, p2, p3 = st.tabs(["D-ESC Smoothed Post", "GPT3.5 Response", "Prompt"])
-                p1.markdown(res["result"][0])
+                p1.markdown(generated_posts["result"][0])
                 p2.markdown(cgpt)
-                p3.markdown(res["prompt"])
+                p3.markdown(generated_posts["prompt"])

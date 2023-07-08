@@ -1,13 +1,9 @@
-from langchain.llms import OpenAI
-from langchain.prompts import PromptTemplate
 from langchain.chains import LLMChain
-
 from langchain.output_parsers import PydanticOutputParser
+from langchain.prompts import PromptTemplate
 from pydantic import BaseModel, Field, validator
-from typing import List
+from chains import llm
 
-from dotenv import load_dotenv
-load_dotenv()
 
 # Define your desired data structure.
 class RephrasedPost(BaseModel):
@@ -21,8 +17,6 @@ class RephrasedPost(BaseModel):
             return field[16:]
         return field
 
-
-llm = OpenAI(temperature=0.9)
 
 parser = PydanticOutputParser(pydantic_object=RephrasedPost)
 

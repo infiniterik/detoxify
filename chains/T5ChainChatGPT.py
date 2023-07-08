@@ -1,40 +1,17 @@
-from langchain.prompts import (
-    ChatPromptTemplate,
-    PromptTemplate,
-    SystemMessagePromptTemplate,
-    HumanMessagePromptTemplate,
-)
-
-from langchain.chat_models import ChatOpenAI as OpenAI
-from langchain.prompts import PromptTemplate
-from langchain.chains import LLMChain
-
-from simplet5 import SimpleT5
-from chains.T5Chain import model
-
-from dotenv import load_dotenv
-load_dotenv()
-
-llm = OpenAI(temperature=0.9)
+from typing import Dict, List
+from collections.abc import Callable
 
 from langchain.chains import LLMChain
 from langchain.chains.base import Chain
-
-from typing import Dict, List
-
+from langchain.chat_models import ChatOpenAI as OpenAI
+from langchain.prompts import (ChatPromptTemplate, HumanMessagePromptTemplate,
+                               PromptTemplate, SystemMessagePromptTemplate)
+from chains import llm, model
 
 class SummaryChain(Chain):
     summarizer: LLMChain
-    model : SimpleT5
+    model : Callable[[str], str]
     prompt : PromptTemplate
-
-    #def __init__(self, summarizer: LLMChain, prompt: PromptTemplate, model_path: str):
-    #    model = SimpleT5()
-    #    # load (supports t5, mt5, byT5 models)
-    #    model.from_pretrained("t5", model_path)
-    #    self.summarizer = summarizer
-    #    self.model = model
-    #    self.prompt = prompt
     
     @property
     def input_keys(self) -> List[str]:
@@ -50,7 +27,7 @@ class SummaryChain(Chain):
         if "post" in inputs:
             inputs["summary"] = self.summarizer.run(post=inputs["post"])
         t5_prompt = self.prompt.format(**{k: v for k,v in inputs.items() if k in self.prompt.input_variables})
-        t5_result = self.model.predict(t5_prompt)
+        t5_result = self.model(t5_prompt)
         return {'result': t5_result, 'prompt': t5_prompt}
 
 system_message = SystemMessagePromptTemplate.from_template("You are a helpful assistant that rewrites reddit posts using less toxic language. When you receive a post, return a less toxic version of the post maintaining the original voice of the author.")

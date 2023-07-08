@@ -1,28 +1,14 @@
-from langchain import Prompt
-import wandb
-#from langchain.chat_models import ChatOpenAI as OpenAI
-from langchain.llms import OpenAI
-from langchain.prompts import PromptTemplate
-from langchain.chains import LLMChain
-
-from chains.T5Chain import model
-
-from simplet5 import SimpleT5
-
-from dotenv import load_dotenv
-load_dotenv()
-
-llm = OpenAI(temperature=0.9)
+from typing import Dict, List
+from collections.abc import Callable
 
 from langchain.chains import LLMChain
 from langchain.chains.base import Chain
-
-from typing import Dict, List
-
+from langchain.prompts import PromptTemplate
+from chains import llm, model
 
 class StanceChain(Chain):
     generation : LLMChain
-    model : SimpleT5
+    model : Callable[[str], str]
     prompt : PromptTemplate
     
     @property
@@ -37,7 +23,7 @@ class StanceChain(Chain):
         if "stances" in inputs:
             inputs["generation"] = self.generation.run(stances=inputs["stances"])
         t5_prompt = self.prompt.format(**{k: v for k,v in inputs.items() if k in self.prompt.input_variables})
-        t5_result = self.model.predict(t5_prompt)
+        t5_result = self.model(t5_prompt)
         return {'result': t5_result, 'prompt': t5_prompt}
 
 

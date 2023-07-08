@@ -70,7 +70,7 @@ class T5Endpoint(Resource):
         rq = {k: v for k, v in request.json.items() if k != "model"}
         if model == "chatgpt":
             return T5ChainChatGPT.pcts_chatgpt(rq)
-        return T5Chain.pcts_chatgpt(rq)
+        return T5Chain.pcts_gpt(rq)
 
 @api.route('/stanceDriven', endpoint='stancedriven')
 @api.doc(body=stanceDrivenDemo, security='apikey')

@@ -18,4 +18,10 @@ st.markdown(
 """
 )
 
-api_key = st.text_input('Enter API KEY here', "my-secret", key="api_key")
+
+api_key = st.sidebar.text_input('Enter API KEY here', "my-secret", key="api_key")
+is_local = st.sidebar.checkbox("Local", key="local")
+base_url = "http://localhost:8000"
+if not is_local:
+    base_url = st.sidebar.text_input('Enter API KEY here', "http://localhost:8000", key="base-url")
+
