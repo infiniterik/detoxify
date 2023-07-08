@@ -5,6 +5,10 @@ import os
 
 load_dotenv()
 
+if "MODEL_SOURCE" not in os.environ:
+    os.environ["MODEL_SOURCE"] = "HUGGINGFACE"
+if "MODEL_NAME" not in os.environ:
+    os.environ["MODEL_NAME"] = "infiniterik/desc-detoxify-prochoice"
 
 def wandb_dl(model_name='knoxcs/detoxify/prochoice.pcts.t5-large:v2'):
     import wandb
