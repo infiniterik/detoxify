@@ -1,6 +1,6 @@
 # detoxify
 
-This is the demo code for [Detoxifying Online Discourse: A Guided Response Generation Approach for Reducing Toxicity in User-Generated Text](pdfs/paper.pdf), as appearing in [The First Workshop on Social Influence in Conversations]([url](https://sites.google.com/view/sicon-2023/)). The poster is available [here](pdfs/poster.pdf).
+This is the demo code for [Detoxifying Online Discourse: A Guided Response Generation Approach for Reducing Toxicity in User-Generated Text](pdfs/detoxify-paper.pdf), as appearing in [The First Workshop on Social Influence in Conversations]([url](https://sites.google.com/view/sicon-2023/)). The poster is available [here](pdfs/detoxify-poster.pdf).
 
 This repository provides a REST API to run the system and a `streamlit` interface to explore. The `streamlit` component can be run without the server if desired.
 
