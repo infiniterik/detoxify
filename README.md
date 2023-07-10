@@ -22,9 +22,15 @@ The `.env` file contains necessary API keys and where to acquire the rewriting m
 
 ### `MODEL_SOURCE`
 
-You can provide your own `LOCAL` model or download one from `WANDB` or `HUGGINGFACE`. The final model used in the paper is available at [infiniterik/desc-detoxify-sicon](https://huggingface.com/infiniterik/desc-detoxify-sicon). Note that both `WANDB` and `HUGGINGFACE` will cache the model locally, so you only need to download it once. There is an option to use the Huggingface Inference API but it is currently unstable (WIP) and not recommended (pull requests welcome).
+You can provide your own `LOCAL` model or download one from `WANDB` or `HUGGINGFACE`. The final model used in the paper is available at [infiniterik/desc-detoxify-sicon](https://huggingface.com/infiniterik/desc-detoxify-sicon). Note that both `WANDB` and `HUGGINGFACE` will cache the model locally, so you only need to download it once. There is an option to use the Huggingface Inference API but it is currently unstable (WIP) and not recommended (issues and pull requests welcome).
+
+## Running the frontend
+
+You can start the frontend using the command `streamlit run DESC_demo.py`. If you are running the frontend without the server, then the necessary models will be loaded as needed. The first time you try an example might take a while. You will also need to ensure that the `Local` option is clicked in the sidebar on every page.
 
 ## Using the server
+
+You may want to use the server if you are fiddling with the front-end and don't want to reload the models regularly, or if you want to run the models on a different machine.
 
 ### `secrets.json`
 
