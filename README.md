@@ -22,7 +22,7 @@ The `.env` file contains necessary API keys and where to acquire the rewriting m
 
 ### `MODEL_SOURCE`
 
-You can provide your own `LOCAL` model or download one from `WANDB` or `HUGGINGFACE`. The final model used in the paper is available at [infiniterik/desc-detoxify-sicon](https://huggingface.com/infiniterik/desc-detoxify-sicon). Note that both `WANDB` and `HUGGINGFACE` will cache the model locally, so you only need to download it once. There is an option to use the Huggingface Inference API but it is currently unstable (WIP) and not recommended (issues and pull requests welcome).
+You can provide your own `LOCAL` model or download one from `WANDB` or `HUGGINGFACE`. The final model used in the paper is available at [infiniterik/desc-detoxify-sicon](https://huggingface.co/infiniterik/desc-detoxify-sicon). Note that both `WANDB` and `HUGGINGFACE` will cache the model locally, so you only need to download it once. There is an option to use the Huggingface Inference API but it is currently unstable (WIP) and not recommended (issues and pull requests welcome).
 
 ## Running the frontend
 
