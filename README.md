@@ -4,7 +4,7 @@ This is the demo code for [Detoxifying Online Discourse: A Guided Response Gener
 
 This repository provides a REST API to run the system and a `streamlit` interface to explore. The `streamlit` component can be run without the server if desired.
 
-Training code currently available at [infiniterik/detoxify-train].
+Training code currently available at [infiniterik/detoxify-train](https://github.com/infiniterik/detoxify-train).
 
 ## Getting started
 
